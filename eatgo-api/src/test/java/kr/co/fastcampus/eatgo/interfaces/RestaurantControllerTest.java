@@ -4,6 +4,7 @@ import kr.co.fastcampus.eatgo.application.RestaurantService;
 import kr.co.fastcampus.eatgo.domain.MenuItem;
 import kr.co.fastcampus.eatgo.domain.Restaurant;
 import kr.co.fastcampus.eatgo.domain.RestaurantNotFoundException;
+import kr.co.fastcampus.eatgo.domain.Review;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -72,9 +73,15 @@ class RestaurantControllerTest {
         MenuItem menuItem = MenuItem.builder()
                 .name("Kimchi")
                 .build();
+        Review review = Review.builder()
+                .name("HyeonJin")
+                .score(5)
+                .description("Great!")
+                .build();
 
         restaurant1.setMenuItems(Arrays.asList(menuItem));
         restaurant2.setMenuItems(Arrays.asList(menuItem));
+        restaurant1.setReviews(Arrays.asList(review));
 
         given(restaurantService.getRestaurant(1004L)).willReturn(restaurant1);
         given(restaurantService.getRestaurant(1005L)).willReturn(restaurant2);
@@ -87,7 +94,10 @@ class RestaurantControllerTest {
                         containsString("\"name\":\"Bob zip\"")
                 ))
                 .andExpect(content()
-                        .string(containsString("Kimchi")));
+                        .string(containsString("Kimchi")))
+                .andExpect(content()
+                        .string(containsString("Great!")));
+
         mvc.perform(get("/restaurants/1005"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(

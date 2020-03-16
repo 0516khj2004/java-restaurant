@@ -1,7 +1,6 @@
 package kr.co.fastcampus.eatgo.application;
 
 import kr.co.fastcampus.eatgo.domain.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -9,16 +8,17 @@ import java.util.List;
 
 @Service
 public class RestaurantService {
-    @Autowired
-    RestaurantRepository restaurantRepository;
 
-    @Autowired
-    MenuItemRepository menuItemRepository;
+    private RestaurantRepository restaurantRepository;
+    private MenuItemRepository menuItemRepository;
+    private ReviewRepository reviewRepository;
 
     public RestaurantService(RestaurantRepository restaurantRepository,
-                             MenuItemRepository menuItemRepository){
+                             MenuItemRepository menuItemRepository,
+                             ReviewRepository reviewRepository){
         this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
+        this.reviewRepository =reviewRepository;
     }
 
     public List<Restaurant> getRestaurants() {
@@ -32,6 +32,9 @@ public class RestaurantService {
 
         List<MenuItem> menuItems = menuItemRepository.findAllByRestaurantId(id);
         restaurant.setMenuItems(menuItems);
+
+        List<Review> reviews = reviewRepository.findAllByRestaurantId(id);
+        restaurant.setReviews(reviews);
 
         return restaurant;
     }
