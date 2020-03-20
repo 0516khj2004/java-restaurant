@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTests {
     @Test
@@ -21,5 +20,18 @@ public class UserTests {
 
         user.deativate();
         assertThat(user.isActive()  ,is(false));
+    }
+    @Test
+    public void accessTokenWithPassword(){
+        User user = User.builder().password("ACCESSTOKEN").build();
+
+        assertThat(user.getAccessToken(), is("ACCESSTOKE"));
+    }
+
+    @Test
+    public void accessTokenWithOutPassword(){
+        User user = new User();
+
+        assertThat(user.getAccessToken(), is(""));
     }
 }
